@@ -100,5 +100,28 @@ body {
     margin-top: -6px;
   }
   
-
+  #sam {
+    margin-right: 85px;
+  }
+  
+  #mas {
+    margin-left: 85px;
+  }
+  
+  #sam,
+  #mas {
+    display: flex;
+    align-items: center;
+  }
+  
+  #mo,
+  #me {
+    margin-left: 10px;
+  }
+  
+  .wind p.wind-text,
+  .humidity p.humidity-text {
+    font-size: 20px;
+    margin: 0;
+  }
   
