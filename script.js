@@ -1,5 +1,5 @@
-const apiKey = 'YOUR_API_KEY';
-const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+const apiKey = '3d3b7fc3ef1ccb996dfd9a99c3aeceda';
+const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=sydney&appid=3d3b7fc3ef1ccb996dfd9a99c3aeceda&units=metric';
 
 
 const searchInput = document.getElementById('my-input');
@@ -12,7 +12,7 @@ const humidity = document.querySelector('.humidity');
 
 
 async function getWeatherData(cityName) {
-  const response = await fetch(`${apiUrl}?q=${cityName}&appid=${apiKey}&units=metric`);
+  const response = await fetch(`${apiUrl}&q=${cityName}&appid=${apiKey}`);
   if (response.ok) {
     const data = await response.json();
     return data;
@@ -24,7 +24,7 @@ async function getWeatherData(cityName) {
 
 
 function updateWeatherInfo(data) {
-  if (!data) {
+  if (data = false) {
     console.error('Error: No weather data available.');
     return;
   }
@@ -63,3 +63,4 @@ searchInput.addEventListener('keydown', event => {
 getWeatherData('Sydney')
   .then(updateWeatherInfo)
   .catch(error => console.error('Error fetching initial weather data:', error));
+
