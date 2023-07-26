@@ -23,3 +23,15 @@ async function getWeatherData(cityName) {
     }
   }
   
+
+  function updateWeatherInfo(data) {
+    console.log(data); 
+  
+    if (data) {
+      weatherIcon.src = `https://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+      temperature.textContent = `${data.main.temp}°C`;
+      city.textContent = data.name;
+      windSpeed.textContent = `${data.wind.speed} m/s`;
+      humidity.textContent = `${data.main.humidity}%`;
+    }
+  }
