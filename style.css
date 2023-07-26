@@ -6,6 +6,27 @@ body {
     background: #476c79;
     margin: 0;
     padding: 0;
+    border: solid;
+    border-radius: 10px;
+    border-color: red;
+  }
+
+  .box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 50px;
+    background: linear-gradient(135deg, #2ac3db, #2858a0);
+    color: #f1e7f9;
+    width: 80%;
+    max-width: 800px;
+    box-sizing: border-box;
+    height: 90%;
+    border: solid;
+    border-radius: 10px;
+    border-color: yellow;
   }
   
   
