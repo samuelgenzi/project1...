@@ -1,6 +1,5 @@
-
-const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=sydney&appid=3d3b7fc3ef1ccb996dfd9a99c3aeceda&units=metric';
-const apiKey = '3d3b7fc3ef1ccb996dfd9a99c3aeceda'; 
+const apiKey = 'YOUR_API_KEY';
+const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
 
 const searchInput = document.getElementById('my-input');
@@ -13,25 +12,54 @@ const humidity = document.querySelector('.humidity');
 
 
 async function getWeatherData(cityName) {
-    const response = await fetch(`${apiUrl}&q=${cityName}&appid=${apiKey}`);
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      console.error('Error fetching weather data:', response.status);
-      return null;
-    }
+  const response = await fetch(`${apiUrl}?q=${cityName}&appid=${apiKey}&units=metric`);
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    console.error('Error fetching weather data:', response.status);
+    return null;
   }
-  
+}
 
-  function updateWeatherInfo(data) {
-    console.log(data); 
-  
-    if (data) {
-      weatherIcon.src = `https://openweathermap.org/img/w/${data.weather[0].icon}.png`;
-      temperature.textContent = `${data.main.temp}°C`;
-      city.textContent = data.name;
-      windSpeed.textContent = `${data.wind.speed} m/s`;
-      humidity.textContent = `${data.main.humidity}%`;
-    }
+
+function updateWeatherInfo(data) {
+  if (!data) {
+    console.error('Error: No weather data available.');
+    return;
   }
+
+  console.log(data); 
+
+  const { weather, main, name, wind } = data;
+  weatherIcon.src = `https://openweathermap.org/img/w/${weather[0].icon}.png`;
+  temperature.textContent = `${main.temp}°C`;
+  city.textContent = name;
+  windSpeed.textContent = `${wind.speed} m/s`;
+  humidity.textContent = `${main.humidity}%`;
+}
+
+
+function handleSearch() {
+  const cityName = searchInput.value.trim();
+  if (cityName) {
+    getWeatherData(cityName)
+      .then(updateWeatherInfo)
+      .catch(error => console.error('Error fetching weather data:', error));
+  }
+}
+
+
+searchButton.addEventListener('click', handleSearch);
+
+
+searchInput.addEventListener('keydown', event => {
+  if (event.key === 'Enter') {
+    handleSearch();
+  }
+});
+
+
+getWeatherData('Sydney')
+  .then(updateWeatherInfo)
+  .catch(error => console.error('Error fetching initial weather data:', error));
