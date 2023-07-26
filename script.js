@@ -10,3 +10,16 @@ const temperature = document.querySelector('.temp');
 const city = document.querySelector('.city');
 const windSpeed = document.querySelector('.wind');
 const humidity = document.querySelector('.humidity');
+
+
+async function getWeatherData(cityName) {
+    const response = await fetch(`${apiUrl}&q=${cityName}&appid=${apiKey}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error('Error fetching weather data:', response.status);
+      return null;
+    }
+  }
+  
