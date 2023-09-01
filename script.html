@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      div {
+        display: grid;
+        justify-content: center;
+        padding-top: 5%;
+        height: 100vh;
+      }
+
+      .margret {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-sizing: border-box;
+        
+      }
+
+      .alcohol {
+        border-radius: 5px;
+        border-width: 10px;
+        border-color: rgb(252, 252, 190);
+        border-style: solid;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-sizing: border-box;
+        width: 100%; 
+        padding: 0; 
+        margin: 0; 
+        display: none;
+      }
+
+      body {
+      background-color: #94efd1;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      }
+
+      #mar {
+      width: 50%;
+      height: auto;
+      justify-content: center;
+      }
+
+      
+    </style>
+</head>
+<body>
+
+<div id="mar">
+  
+</div>  
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const api = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita";
+
+  fetch(api)
+    .then(res => res.json())
+    .then(data => {
+      const drinks = data.drinks;
+      const drinkList = document.querySelector("#mar");
+
+      drinks.forEach(drink => {
+        drinkList.innerHTML += `
+          <ul>
+            <li>
+              <div class='margret'>
+                <h1>${drink.strDrink}</h1>
+                <img src='${drink.strDrinkThumb}'>
+                <button class="hey">see first</button>
+              </div>
+
+              <div class="alcohol">
+                <h1>Ingredient</h1>
+                <ul id="add">
+                  <li>${drink.strIngredient1}</li> 
+                  <li>${drink.strIngredient2}</li>
+                  <li>${drink.strIngredient3}</li>
+                  <li>${drink.strIngredient4}</li> 
+                </ul>
+                <h2>instructions</h2>
+                <p>${drink.strInstructions}</p>
+                <form class="input-form">
+                  <input type="text" class="input-field" placeholder="Enter something...">
+                  <button type="submit" class="submit-button">Submit</button>
+                </form>
+              </div>
+            </li>
+          </ul>`;
+      });
+
+      const showButtons = document.querySelectorAll(".hey");
+      const listeners = document.querySelectorAll(".alcohol");
+
+      showButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+          if (listeners[index].style.display === "none") {
+            listeners[index].style.display = "flex";
+          } else {
+            listeners[index].style.display = "none";
+          }
+        });
+      });
+    });
+    
+    const myGod = document.querySelector(".input-field");
+    const myDog = document.querySelector(".submit-button");
+    const myCat = document.querySelector("#add");
+    
+
+    function terstQuench(drink, inputField, ingredientList){
+    const options = {
+      method: "patch",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      },
+      body: JSON.stringify(drink)
+    }
+
+    fetch ('http://localhost:3000/recepie/${drink.id}', options)
+    .then(res => res.json())
+    .then(()=>{
+      const inputValue = inputField.value;
+      if(myGod.value === " "){
+        throw new Error("first put ingredient of desire")
+      }else{
+        const newIngredient = document.createElement("li");
+        newIngredient.textContent = inputValue;
+        ingredientList.appendChild(newIngredient);
+      }
+    });
+  }
+  terstQuench(drink, myGod, myCat);
+
+
+  function addRecepie(drink){
+    
+    const options = {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      },
+      body: JSON.stringify(drink)
+    }
+
+    fetch ('http://localhost:3000/recepie', options)
+    .then(res => res.json())
+    .then(data => console.log(data))
+
+  }
+
+}); 
+</script>
+
+</body>
+</html>
