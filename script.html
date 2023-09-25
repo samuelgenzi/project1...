@@ -5,109 +5,201 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-      div {
-        display: grid;
-        justify-content: center;
-        padding-top: 5%;
-        height: 100vh;
+         * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .margret {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+            
+            border-width: 10px;
+            border-color: #4caf50;
+            border-style: solid;
+          }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .alcohol {
+          display: none;
+          position: fixed;
+          top: 10%;
+          left: 10%;
+          width: 80%;
+          height: 80%;
+          background-color: rgba(0,0,0,0.3);
+          margin: 0 auto;
+          z-index: 1;
+          align-items: center;
+        }
+      .brewery {
+          background-color: green;
+          width: 50%;
+          margin:auto;
+          
       }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .beer-list {
+            list-style: none;
+            padding: 0;
+        }
+        .beer-item {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .beer-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .beer-name {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .beer-description {
+            margin-bottom: 10px;
+        }
+        .show-ingredient {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .show-ingredient:hover {
+            background-color: #45a049;
+        }
 
-      .margret {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        box-sizing: border-box;
-        
-      }
 
-      .alcohol {
-        border-radius: 5px;
-        border-width: 10px;
-        border-color: rgb(252, 252, 190);
-        border-style: solid;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        box-sizing: border-box;
-        width: 100%; 
-        padding: 0; 
-        margin: 0; 
-        display: none;
-      }
-
-      body {
-      background-color: #94efd1;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      }
-
-      #mar {
-      width: 50%;
-      height: auto;
-      justify-content: center;
-      }
-
-      
+        .ingredients {
+            display: none;
+            margin-top: 20px;
+        }
+        .ingredients ul {
+            list-style: disc;
+            margin-left: 20px;
+        }
+        .ingredients li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
-
-<div id="mar">
-  
-</div>  
-
+<div id="mar"></div>  
 <script>
-
-
-    const API = "https://api.punkapi.com/v2/beers";
-
-    fetch(API)
-    .then(res => res.json())
-    .then(drinks => {
-      
-      const drinkList = document.querySelector("#mar");
-
-      drinks.forEach(beer => {
-        drinkList.innerHTML += `
+  const API = "https://api.punkapi.com/v2/beers";
+  fetch(API)
+  .then(res => res.json())
+  .then(beers => {
+    const drinkList = document.querySelector("#mar");
+    beers.forEach(beer => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `
+        <div class='margret'>
+        <div>
+          <h1>${beer.name}</h1>
+          <img class="img" src='${beer.image_url}'>
+          <button class="show-ingredient">Show Ingredients</button>
+        </div>
+        <div class="alcohol">
+          <div class="brewery">
+          <h1>Ingredients</h1>
           <ul>
-            <li>
-              <div class='margret'>
-                <h1>${beer.name}</h1>
-                <img src='${beer.image_url}'>
-                <button class="hey">see first</button>
-              </div>
-                 
-              <div class="alcohol">
-                
-              </div>
-            </li>
-          </ul>`;
-         });
-        })
-
-
-        function goodBeer(beer) {
-        const options = {
-          method: "post",
-          headers: {
-              "Content-Type": "application/json",
-              "Accepts": "application/json"
-          },
-          body: JSON.stringify(beer)
-
+            ${beer.ingredients.hops.map(e => 
+              `
+              <li>
+                add ${e.name} at the ${e.add} of the process.
+              </li>
+              `
+            ).join("")}
+          </ul>
+        </div>
+        </div>
+        <h1>Pairing Recommendation</h1>
+        <p class="food">${beer.description}</p>
+        <h2>Description</h2>
+        <p>${beer.food_pairing}</p>
+        </div>
+      `;
+      drinkList.appendChild(listItem);
+      
+    });
+    const showButtons = document.querySelectorAll(".show-ingredient");
+    const listeners = document.querySelectorAll(".alcohol");
+    showButtons.forEach((button, index) => {
+      button.addEventListener("click", () => {
+        if (listeners[index].style.display === "none") {
+          listeners[index].style.display = "flex";
+        } else {
+          listeners[index].style.display = "none";
         }
-      }
+
+        listeners[index].addEventListener('click', function() {
+          if(listeners[index].style.display = "flex") {
+            listeners[index].style.display = "none";  
+          }
+        })
+      });
       
-      fetch("http://localhost:3000/recepie", options) 
+    });
+    
+  });
+    const showButtons = document.querySelectorAll(".show-ingredient");
+    const listeners = document.querySelectorAll(".alcohol");
+
+    showButtons.forEach((button, index) => {
+      button.addEventListener("click", () => {
+        if (listeners[index].style.display === "none") {
+          listeners[index].style.display = "flex";
+        } else {
+          listeners[index].style.display = "none";
+        }
+      });
+    });
+  
+
+  window.addEventListener("click", ()=>{
+    style.display = none;
+  })
+  
+  function goodBeer(beer) {
+    const options = {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      },
+      body: JSON.stringify(beer)
+    };
+    fetch("http://localhost:3000/recepie", options)
       .then(res => res.json())
-      .then(data => {console.log(data)});
-
-      
-
-
+      .then(data => {
+        console.log(data);
+      });
+  }
 </script>
 </body>
 </html>
